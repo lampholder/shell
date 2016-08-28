@@ -8,9 +8,10 @@ syntax on
 " Needed for Ubuntu:
 "  set t_Co=16 
 " let g:solarized_termtrans=1
-" let g:solarized_termcolors=256
-" set background=dark
-" colorscheme solarized
+let g:solarized_termcolors=256
+set background=dark
+colorscheme solarized
+
 set hlsearch
 highlight Search term=underline cterm=underline
 " }
@@ -50,4 +51,36 @@ nnoremap <Down> <ESC>
 nnoremap <Left> <ESC>
 nnoremap <Right> <ESC>
 
+"=====[ Highlight matches when jumping to next ]=============
 
+" This rewires n and N to do the highlighing...
+nnoremap <silent> n   n:call HLNext(0.4)<cr>
+nnoremap <silent> N   N:call HLNext(0.4)<cr>
+
+function! HLNext (blinktime)
+    highlight WhiteOnRed ctermfg=white ctermbg=red
+    let [bufnum, lnum, col, off] = getpos('.')
+    let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
+    let target_pat = '\c\%#\%('.@/.'\)'
+    let ring = matchadd('WhiteOnRed', target_pat, 101)
+    redraw
+    exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
+    call matchdelete(ring)
+    redraw
+endfunction
+
+"====[ Make the 81st column stand out ]====================
+highlight ColorColumn ctermbg=magenta
+call matchadd('ColorColumn', '\%81v', 100)
+
+"====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
+
+exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
+set list
+
+"====[ Swap : and ; to make colon commands easier to type ]======
+
+nnoremap  ;  :
+
+"====[ Plugins ]=====
+inoremap <expr>  <C-K>   BDG_GetDigraph()
