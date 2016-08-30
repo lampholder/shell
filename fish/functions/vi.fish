@@ -1,3 +1,3 @@
-function python
+function vi
     command vim $argv;
 end
