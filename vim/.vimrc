@@ -3,6 +3,8 @@ execute pathogen#infect()
 filetype plugin indent on
 syntax on
 
+let mapleader=","
+
 " Appearance {{{
 " Cosmetics {
 " Needed for Ubuntu:
@@ -27,7 +29,6 @@ set shiftwidth=4
 " }
 
 " === INTERACTION =========================================================
-let mapleader=","
 " Navigation {
 " Move around more quickly:
 noremap <C-j> 10j
@@ -84,3 +85,5 @@ nnoremap  ;  :
 
 "====[ Plugins ]=====
 inoremap <expr>  <C-K>   BDG_GetDigraph()
+
+noremap <Leader>k :NERDTreeToggle<CR>
