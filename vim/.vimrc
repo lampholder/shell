@@ -10,8 +10,8 @@ set shell=bash "play nicely with fish shell
 " Appearance {{{
 " Cosmetics {
 " Needed for Ubuntu:
-"  set t_Co=16 
-" let g:solarized_termtrans=1
+set t_Co=256 "16 
+let g:solarized_termtrans=1
 let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
