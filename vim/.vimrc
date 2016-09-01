@@ -72,10 +72,6 @@ function! HLNext (blinktime)
     redraw
 endfunction
 
-"====[ Make the 81st column stand out ]====================
-highlight ColorColumn ctermbg=magenta
-call matchadd('ColorColumn', '\%81v', 100)
-
 "====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
 
 exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
@@ -91,5 +87,19 @@ inoremap <expr>  <C-K>   BDG_GetDigraph()
 noremap <Leader>k :NERDTreeToggle<CR>
 
 autocmd! BufWritePost,BufReadPost * Neomake  "Not BufEnter please
+
+autocmd FileType python setlocal completeopt-=preview
+
+" These are defaults, but putting them here will help me to remember them :P
+let g:jedi#goto_command = "<leader>d"
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#rename_command = "<leader>r"
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
 
 set laststatus=2
