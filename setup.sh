@@ -20,7 +20,13 @@ CONFIG_PATH="$HOME/.toml_config"
 function git_clone_or_pull {
     echo "Git clone_or_pull $2 to $1"
     if cd $1; then
-        sudo -u $SUDO_USER git pull
+        if [ "$3" == "brutal" ]; then
+            echo "Brutally overwiting any local changes"
+            sudo -u $SUDO_USER git fetch --all
+            sudo -u $SUDO_USER git reset --hard origin/master
+        else
+            sudo -u $SUDO_USER git pull
+        fi
     else
         sudo -u $SUDO_USER mkdir $1
         sudo -u $SUDO_USER git clone $2 $1
@@ -87,8 +93,8 @@ git_clone_or_pull ~/.vim/bundle/supertab https://github.com/ervandew/supertab.gi
 git_clone_or_pull ~/.vim/bundle/neomake https://github.com/neomake/neomake.git
 git_clone_or_pull ~/.vim/bundle/jedi-vim https://github.com/davidhalter/jedi-vim
 python -m ensurepip --upgrade
-pip install pylint
-pip install jedi
+pip install --user pylint
+pip install --user jedi
 
 
 # This bit doesn't currently honour the 'brutal' flag
