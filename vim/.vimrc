@@ -103,3 +103,15 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 
 
 set laststatus=2
+
+let g:neomake_error_sign = {
+            \ 'text': '>>',
+            \ 'texthl': 'ErrorMsg',
+            \ }
+hi MyWarningMsg ctermbg=3 ctermfg=0
+let g:neomake_warning_sign = {
+            \ 'text': '>>',
+            \ 'texthl': 'MyWarningMsg',
+            \ }
+"let g:neomake_warning_sign={'text': '⚠', 'texthl': 'NeomakeErrorMsg'}
+"let g:neomake_error_sign={'text': 'X', 'texthl': 'NeomakeErrorMsg'}
