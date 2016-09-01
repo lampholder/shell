@@ -93,8 +93,8 @@ git_clone_or_pull ~/.vim/bundle/supertab https://github.com/ervandew/supertab.gi
 git_clone_or_pull ~/.vim/bundle/neomake https://github.com/neomake/neomake.git
 git_clone_or_pull ~/.vim/bundle/jedi-vim https://github.com/davidhalter/jedi-vim
 python -m ensurepip --upgrade
-pip install --user pylint
-pip install --user jedi
+sudo -u $SUDO_USER -H pip install --user pylint
+sudo -u $SUDO_USER -H pip install --user jedi
 
 
 # This bit doesn't currently honour the 'brutal' flag
