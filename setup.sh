@@ -2,6 +2,7 @@
 options=$1
 
 # Locale setting fun
+dpkg-reconfigure locales
 locale-gen "en_GB.UTF-8"
 sh -c "echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale"
 
