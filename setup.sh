@@ -76,7 +76,11 @@ symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions 
 # Fetch and configure neovim + plugins
 install_pkg_from_repo vim
 install_pkg_from_repo libtool libtool-bin autoconf automake cmake g++ pkg-config unzip 
-install_pkg_from_repo python-dev python-pip python3-dev python3-pip
+install_pkg_from_repo python-dev python3-dev python3-pip
+
+download_file https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+
 sudo -u $SUDO_USER -H pip install --user neovim
 git_clone_or_pull ~/neovim https://github.com/neovim/neovim
 cd ~/neovim
