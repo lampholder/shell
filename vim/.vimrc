@@ -82,13 +82,12 @@ set list
 nnoremap  ;  :
 
 "====[ Plugins ]=====
-inoremap <expr>  <C-K>   BDG_GetDigraph()
+"inoremap <expr>  <C-K>   BDG_GetDigraph()
 
-noremap <Leader>k :NERDTreeToggle<CR>
+"noremap <Leader>k :NERDTreeToggle<CR>
 
-autocmd! BufWritePost,BufReadPost * Neomake  "Not BufEnter please
 
-autocmd FileType python setlocal completeopt-=preview
+"autocmd FileType python setlocal completeopt-=preview
 
 " These are defaults, but putting them here will help me to remember them :P
 let g:jedi#goto_command = "<leader>d"
@@ -104,6 +103,15 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 
 set laststatus=2
 
+"====[ Neomake ]========
+"let g:neomake_python_enable_makers = ['pylint']
+
+" Always show the gutter
+sign define dummy
+autocmd! BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
+highlight SignColumn ctermbg=235
+
+autocmd! BufWritePost,BufReadPost * Neomake  "Not BufEnter please
 let g:neomake_error_sign = {
             \ 'text': '>>',
             \ 'texthl': 'ErrorMsg',
@@ -113,5 +121,3 @@ let g:neomake_warning_sign = {
             \ 'text': '>>',
             \ 'texthl': 'MyWarningMsg',
             \ }
-"let g:neomake_warning_sign={'text': '⚠', 'texthl': 'NeomakeErrorMsg'}
-"let g:neomake_error_sign={'text': 'X', 'texthl': 'NeomakeErrorMsg'}
