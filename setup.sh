@@ -73,8 +73,14 @@ symlink_files_in_directory $CONFIG_PATH/fish ~/.config/fish $options
 symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions $options
 
 
-# Fetch and configure vim + plugins
+# Fetch and configure neovim + plugins
 install_pkg_from_repo vim
+install_pkg_from_repo libtool libtool-bin autoconf automake cmake g++ pkg-config unzip 
+install_pkg_from_repo python-dev python-pip python3-dev python3-pip
+sudo -u $SUDO_USER -H pip install --user neovim
+git_clone_or_pull ~/neovim https://github.com/neovim/neovim
+cd ~/neovim
+sudo -u $SUDO_USER make install
 
 sudo -u $SUDO_USER mkdir -p ~/.vim/autoload
 sudo -u $SUDO_USER mkdir -p ~/.vim/bundle
@@ -94,9 +100,8 @@ git_clone_or_pull ~/.vim/bundle/supertab https://github.com/ervandew/supertab.gi
 git_clone_or_pull ~/.vim/bundle/neomake https://github.com/neomake/neomake.git
 git_clone_or_pull ~/.vim/bundle/jedi-vim https://github.com/davidhalter/jedi-vim
 python -m ensurepip --upgrade
-sudo -u $SUDO_USER -H pip install --user pylint
 sudo -u $SUDO_USER -H pip install --user jedi
-
+install_pkg_from_repo pylint
 
 # This bit doesn't currently honour the 'brutal' flag
 sudo -u $SUDO_USER ln -s $CONFIG_PATH/vim/plugins/* ~/.vim/bundle/
