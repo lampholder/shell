@@ -99,6 +99,11 @@ sudo -u $SUDO_USER mkdir -p ~/.vim/bundle
 
 symlink_files_in_directory $CONFIG_PATH/vim ~ $options
 
+# Make Neovim use the standard vim settings.
+rm -rf ~/.config/nvim
+ln -s ~/.vim ~/.config/nvim
+ln -s ~/.vimrc ~/.config/nvim/init.vim
+
 # We're pulling these in from their own git reops, so let's keep them out of $CONFIG_PATH
 git_clone_or_pull ~/.vim/bundle/vim-colors-solarized https://github.com/altercation/vim-colors-solarized.git
 git_clone_or_pull ~/.vim/bundle/airline https://github.com/vim-airline/vim-airline.git
