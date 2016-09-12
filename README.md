@@ -12,9 +12,9 @@ wget -qO- https://raw.githubusercontent.com/lampholder/terminal/master/setup.sh 
 Or, if you'd like it to hamfistedly overwrite whatever .vimrc etc you already have in place:
 
 ~~~~
-curl https://raw.githubusercontent.com/lampholder/terminal/master/setup.sh | sudo bash -s brutal
+curl https://raw.githubusercontent.com/lampholder/terminal/master/setup.sh | sudo bash -s --brutal
 
 or
 
-wget -qO- https://raw.githubusercontent.com/lampholder/terminal/master/setup.sh | sudo bash -s brutal
+wget -qO- https://raw.githubusercontent.com/lampholder/terminal/master/setup.sh | sudo bash -s --brutal
 ~~~~

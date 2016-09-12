@@ -1,13 +1,19 @@
-# This script sets up a fresh linux account for use.
-options=$1
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# This script sets up a fresh linux account for use
+if [[ $# == 0 || $1 == --brutal ]]; then
+    options="brutal"
+fi
 
 # Locale setting fun
 dpkg-reconfigure locales
 locale-gen "en_GB.UTF-8"
-sh -c "echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale"
+echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
 
 function install_pkg_from_repo {
-    apt-get -y install $1 || sudo -u $SUDO_USER brew install $1
+    apt-get -y install $@ || sudo -u $SUDO_USER brew install $@
 }
 
 install_pkg_from_repo git
@@ -17,11 +23,10 @@ git config --global user.name "Tom Lant"
 
 CONFIG_PATH="$HOME/.toml_config"
 
-
 function git_clone_or_pull {
     echo "Git clone_or_pull $2 to $1"
     if cd $1; then
-        if [ "$3" == "brutal" ]; then
+        if [[ $# == 3 && "$3" == "brutal" ]]; then
             echo "Brutally overwiting any local changes"
             sudo -u $SUDO_USER git fetch --all
             sudo -u $SUDO_USER git reset --hard origin/master
@@ -74,9 +79,10 @@ symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions 
 
 
 # Fetch and configure neovim + plugins
-install_pkg_from_repo vim
-install_pkg_from_repo libtool libtool-bin autoconf automake cmake g++ pkg-config unzip 
-install_pkg_from_repo python-dev python3-dev python3-pip
+install_pkg_from_repo libtool 
+install_pkg_from_repo libtool-bin || true # We don't mind if this one fails.
+install_pkg_from_repo autoconf automake cmake g++ pkg-config unzip build-essential
+install_pkg_from_repo python-dev python3-dev #python3-pip
 
 download_file https://bootstrap.pypa.io/get-pip.py
 python get-pip.py
@@ -84,7 +90,7 @@ python get-pip.py
 sudo -u $SUDO_USER -H pip install --user neovim
 git_clone_or_pull ~/neovim https://github.com/neovim/neovim
 cd ~/neovim
-sudo -u $SUDO_USER make install
+make install
 
 sudo -u $SUDO_USER mkdir -p ~/.vim/autoload
 sudo -u $SUDO_USER mkdir -p ~/.vim/bundle
@@ -92,6 +98,11 @@ sudo -u $SUDO_USER mkdir -p ~/.vim/bundle
 (cd ~/.vim/autoload && download_file https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim)
 
 symlink_files_in_directory $CONFIG_PATH/vim ~ $options
+
+# Make Neovim use the standard vim settings.
+rm -rf ~/.config/nvim
+ln -s ~/.vim ~/.config/nvim
+ln -s ~/.vimrc ~/.config/nvim/init.vim
 
 # We're pulling these in from their own git reops, so let's keep them out of $CONFIG_PATH
 git_clone_or_pull ~/.vim/bundle/vim-colors-solarized https://github.com/altercation/vim-colors-solarized.git
@@ -103,7 +114,6 @@ git_clone_or_pull ~/.vim/bundle/supertab https://github.com/ervandew/supertab.gi
 # Getting a bit specific for python dev:
 git_clone_or_pull ~/.vim/bundle/neomake https://github.com/neomake/neomake.git
 git_clone_or_pull ~/.vim/bundle/jedi-vim https://github.com/davidhalter/jedi-vim
-python -m ensurepip --upgrade
 sudo -u $SUDO_USER -H pip install --user jedi
 install_pkg_from_repo pylint
 
