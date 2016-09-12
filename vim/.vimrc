@@ -49,10 +49,10 @@ noremap <Leader>n :setlocal number!<cr>
 
 
 " === BAD HABITS ==========================================================
-nnoremap <Up> <ESC>
-nnoremap <Down> <ESC>
-nnoremap <Left> <ESC>
-nnoremap <Right> <ESC>
+nnoremap <Up> :resize -3<CR>
+nnoremap <Down> :resize +3<CR>
+nnoremap <Left> :vertical resize -3<CR>
+nnoremap <Right> :vertical resize +3<CR>
 
 "=====[ Highlight matches when jumping to next ]=============
 
