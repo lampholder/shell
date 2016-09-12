@@ -1,8 +1,8 @@
-# This script sets up a fresh linux account for use
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
 
+# This script sets up a fresh linux account for use
 if [[ $# == 0 || $1 == --brutal ]]; then
     options="brutal"
 fi
@@ -10,7 +10,7 @@ fi
 # Locale setting fun
 dpkg-reconfigure locales
 locale-gen "en_GB.UTF-8"
-sh -c "echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale"
+echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
 
 function install_pkg_from_repo {
     apt-get -y install $@ || sudo -u $SUDO_USER brew install $@
