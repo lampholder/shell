@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # This script sets up a fresh linux account for use
-if [[ $# == 0 || $1 == --brutal ]]; then
+if [[ $# == 0 || $1 == brutal ]]; then
     options="brutal"
 fi
 
