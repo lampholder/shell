@@ -7,6 +7,10 @@ if [[ $# == 0 || $1 == brutal ]]; then
     options="brutal"
 fi
 
+if [[ $# == 0 || $1 == noinstall ]]; then
+    options="noinstall"
+fi
+
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
     platform='mac'
@@ -29,11 +33,13 @@ if [ "$platform" == "linux" ]; then
 fi
 
 function install_pkg_from_repo {
-    echo "Installing from repo: $@"
-    if [ "$platform" == "linux" ]; then
-        apt-get -y install $@
-    elif [ "$platform" == "mac" ]; then
-        sudo -u $SUDO_USER brew install $@
+    if [ "$options" != "noinstall" ]; then
+        echo "Installing from repo: $@"
+        if [ "$platform" == "linux" ]; then
+            apt-get -y install $@
+        elif [ "$platform" == "mac" ]; then
+            sudo -u $SUDO_USER brew install $@
+        fi
     fi
 }
 
