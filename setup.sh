@@ -22,14 +22,16 @@ echo "OS detected: $platform"
 
 if [ "$platform" == "linux" ]; then
     # Locale setting fun
+    echo "Configuring locales"
     dpkg-reconfigure locales
     locale-gen "en_GB.UTF-8"
     echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
 fi
 
 function install_pkg_from_repo {
+    echo "Installing from repo: $@"
     if [ "$platform" == "linux" ]; then
-        apt-get -y install $@ 
+        apt-get -y install $@
     elif [ "$platform" == "mac" ]; then
         sudo -u $SUDO_USER brew install $@
     fi
