@@ -18,6 +18,8 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     platform='windows' #!?
 fi
 
+echo "OS detected: $platform"
+
 if [ "$platform" == "linux" ]; then
     # Locale setting fun
     dpkg-reconfigure locales
