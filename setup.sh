@@ -26,7 +26,11 @@ if [ "$platform" == "linux" ]; then
 fi
 
 function install_pkg_from_repo {
-    apt-get -y install $@ || sudo -u $SUDO_USER brew install $@
+    if [ "$platform" == "linux" ]; then
+        apt-get -y install $@ 
+    elif [ "$platform" == "mac" ]; then
+        sudo -u $SUDO_USER brew install $@
+    fi
 }
 
 install_pkg_from_repo git
