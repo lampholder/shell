@@ -32,6 +32,15 @@ if [ "$platform" == "linux" ]; then
     echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
 fi
 
+if [ $(curl --version) ]; then
+    downloader="curl"
+elif [ $(wget --version) ]; then
+    downloader="wget"
+else
+    echo "This script requires at least one of curl/wget"
+    exit 1
+fi
+
 function install_pkg_from_repo {
     if [ "$options" != "noinstall" ]; then
         echo "Installing from repo: $@"
@@ -90,7 +99,10 @@ function symlink_files_in_directory {
 }
 
 function download_file {
-    sudo -u $SUDO_USER wget $1 2>/dev/null || sudo -u $SUDO_USER curl -O $1
+    if [ "$downloader" == "wget" ]; then
+        sudo -u $SUDO_USER wget $1 2>/dev/null
+    else
+        sudo -u $SUDO_USER curl -O $1
 }
 
 git_clone_or_pull $CONFIG_PATH https://github.com/lampholder/terminal.git
