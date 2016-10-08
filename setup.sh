@@ -109,6 +109,7 @@ function download_file {
         sudo -u $SUDO_USER wget $1 2>/dev/null
     else
         sudo -u $SUDO_USER curl -O $1
+    fi
 }
 
 git_clone_or_pull $CONFIG_PATH https://github.com/lampholder/terminal.git
