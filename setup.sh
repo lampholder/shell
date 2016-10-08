@@ -18,7 +18,7 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     platform='windows' #!?
 fi
 
-if [ "$(platform)" == "linux" ]; then
+if [ "$platform" == "linux" ]; then
     # Locale setting fun
     dpkg-reconfigure locales
     locale-gen "en_GB.UTF-8"
