@@ -7,10 +7,23 @@ if [[ $# == 0 || $1 == brutal ]]; then
     options="brutal"
 fi
 
-# Locale setting fun
-dpkg-reconfigure locales
-locale-gen "en_GB.UTF-8"
-echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
+if [ "$(uname)" == "Darwin" ]; then
+    # Do something under Mac OS X platform
+    platform='mac'
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    # Do something under GNU/Linux platform
+    platform='linux'
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    # Do something under Windows NT platform
+    platform='windows' #!?
+fi
+
+if [ "$(platform)" == "linux" ]; then
+    # Locale setting fun
+    dpkg-reconfigure locales
+    locale-gen "en_GB.UTF-8"
+    echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
+fi
 
 function install_pkg_from_repo {
     apt-get -y install $@ || sudo -u $SUDO_USER brew install $@
