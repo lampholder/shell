@@ -5,10 +5,12 @@ IFS=$'\n\t'
 # This script sets up a fresh linux account for use
 if [[ $# == 0 || $1 == brutal ]]; then
     options="brutal"
+    brutal=true
 fi
 
 if [[ $# == 0 || $1 == noinstall ]]; then
     options="noinstall"
+    noinstall=true
 fi
 
 if [ "$(uname)" == "Darwin" ]; then
@@ -23,6 +25,13 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
 fi
 
 echo "OS detected: $platform"
+echo "Options enabled:"
+if [ $brutal ]; then
+    echo "BRUTAL - will overwrite all existing files and symlinks"
+fi
+if [ $noinstall ]; then
+    echo "NOINSTALL - will not bother trying to install anything from repos"
+fi
 
 if [ "$platform" == "linux" ]; then
     # Locale setting fun
