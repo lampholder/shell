@@ -3,12 +3,17 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # This script sets up a fresh linux account for use
-if [[ $# == 0 || $1 == brutal ]]; then
+
+# Handle cli options
+brutal=false
+noinstall=false
+
+if [[ $# == 0 || "$@" == *"brutal"* ]]; then
     options="brutal"
     brutal=true
 fi
 
-if [[ $# == 0 || $1 == noinstall ]]; then
+if [[ $# == 0 || "$@" == *"noinstall"* ]]; then
     options="noinstall"
     noinstall=true
 fi
