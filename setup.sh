@@ -130,7 +130,6 @@ git_clone_or_pull $CONFIG_PATH https://github.com/lampholder/terminal.git
 
 # Fetch and configure fish shell
 install_pkg_from_repo fish
-chsh -s `which fish` $SUDO_USER
 
 sudo -u $SUDO_USER mkdir -p ~/.config/fish/functions
 
@@ -187,3 +186,5 @@ if [ -f "/proc/user_beancounters" ]; then
     sudo -u $SUDO_USER mv $HOME/.bashrc $HOME/.bashrc_old
     symlink_files_in_directory $CONFIG_PATH/bash ~ $options
 fi
+
+echo "Now do chsh -s `which fish` $SUDO_USER"
