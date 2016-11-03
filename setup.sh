@@ -151,6 +151,10 @@ git_clone_or_pull ~/neovim https://github.com/neovim/neovim
 cd ~/neovim
 make install
 
+# Tidy up
+cd ~
+rm -rf ~/neovim
+
 sudo -u $SUDO_USER mkdir -p ~/.vim/autoload
 sudo -u $SUDO_USER mkdir -p ~/.vim/bundle
 
@@ -187,4 +191,4 @@ if [ -f "/proc/user_beancounters" ]; then
     symlink_files_in_directory $CONFIG_PATH/bash ~
 fi
 
-echo "Now do chsh -s `which fish` $SUDO_USER"
+echo "Now run \"chsh -s `which fish` $SUDO_USER\""
