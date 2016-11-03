@@ -72,7 +72,7 @@ function install_pkgs_from_repo {
     fi
 }
 
-install_pkgsi_from_repo "git"
+install_pkgs_from_repo "git"
 
 git config --global user.email "lampholder@gmail.com"
 git config --global user.name "Tom Lant"
