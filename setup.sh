@@ -61,7 +61,7 @@ else
     fi
 fi
 
-function install_pkg_from_repo {
+function install_pkgs_from_repo {
     if [ "$options" != "noinstall" ]; then
         echo "Installing from repo: $@"
         if [ "$platform" == "linux" ]; then
@@ -72,7 +72,7 @@ function install_pkg_from_repo {
     fi
 }
 
-install_pkg_from_repo git
+install_pkgsi_from_repo "git"
 
 git config --global user.email "lampholder@gmail.com"
 git config --global user.name "Tom Lant"
@@ -129,7 +129,7 @@ function download_file {
 git_clone_or_pull $CONFIG_PATH https://github.com/lampholder/terminal.git
 
 # Fetch and configure fish shell
-install_pkg_from_repo fish
+install_pkgs_from_repo "fish"
 
 sudo -u $SUDO_USER mkdir -p ~/.config/fish/functions
 
@@ -138,10 +138,10 @@ symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions 
 
 
 # Fetch and configure neovim + plugins
-install_pkg_from_repo libtool 
-install_pkg_from_repo libtool-bin || true # We don't mind if this one fails.
-install_pkg_from_repo autoconf automake cmake g++ pkg-config unzip build-essential
-install_pkg_from_repo python-dev python3-dev #python3-pip
+install_pkgs_from_repo "libtool"
+install_pkgs_from_repo "libtool-bin" || true # We don't mind if this one fails.
+install_pkgs_from_repo "autoconf automake cmake g++ pkg-config unzip build-essential"
+install_pkgs_from_repo "python-dev python3-dev" #python3-pip
 
 download_file https://bootstrap.pypa.io/get-pip.py
 python get-pip.py
@@ -174,7 +174,7 @@ git_clone_or_pull ~/.vim/bundle/supertab https://github.com/ervandew/supertab.gi
 git_clone_or_pull ~/.vim/bundle/neomake https://github.com/neomake/neomake.git
 git_clone_or_pull ~/.vim/bundle/jedi-vim https://github.com/davidhalter/jedi-vim
 sudo -u $SUDO_USER -H pip install --user jedi
-install_pkg_from_repo pylint
+install_pkgs_from_repo "pylint"
 
 # This bit doesn't currently honour the 'brutal' flag
 sudo -u $SUDO_USER ln -s $CONFIG_PATH/vim/plugins/* ~/.vim/bundle/
