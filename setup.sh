@@ -133,8 +133,8 @@ install_pkgs_from_repo "fish"
 
 sudo -u $SUDO_USER mkdir -p ~/.config/fish/functions
 
-symlink_files_in_directory $CONFIG_PATH/fish ~/.config/fish $options
-symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions $options
+symlink_files_in_directory $CONFIG_PATH/fish ~/.config/fish
+symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions
 
 
 # Fetch and configure neovim + plugins
@@ -156,7 +156,7 @@ sudo -u $SUDO_USER mkdir -p ~/.vim/bundle
 
 (cd ~/.vim/autoload && download_file https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim)
 
-symlink_files_in_directory $CONFIG_PATH/vim ~ $options
+symlink_files_in_directory $CONFIG_PATH/vim ~
 
 # Make Neovim use the standard vim settings.
 rm -rf ~/.config/nvim
@@ -184,7 +184,7 @@ sudo -u $SUDO_USER ln -s $CONFIG_PATH/vim/plugins/* ~/.vim/bundle/
 if [ -f "/proc/user_beancounters" ]; then
     echo "We're inside an openvz container"
     sudo -u $SUDO_USER mv $HOME/.bashrc $HOME/.bashrc_old
-    symlink_files_in_directory $CONFIG_PATH/bash ~ $options
+    symlink_files_in_directory $CONFIG_PATH/bash ~
 fi
 
 echo "Now do chsh -s `which fish` $SUDO_USER"
