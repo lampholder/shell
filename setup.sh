@@ -4,19 +4,26 @@ IFS=$'\n\t'
 
 # This script sets up a fresh linux account for use
 
-# Handle cli options
 brutal=false
 noinstall=false
 
-if [[ $# == 0 || "$@" == *"brutal"* ]]; then
-    options="brutal"
-    brutal=true
-fi
-
-if [[ $# == 0 || "$@" == *"noinstall"* ]]; then
-    options="noinstall"
-    noinstall=true
-fi
+# Idiomatic parameter and option handling in sh
+while test $# -gt 0
+do
+    case "$1" in
+        --brutal) echo "Enabling BRUTAL mode"
+            brutal=true
+            ;;
+        --noinstall) echo "Enabling NOINSTALL mode"
+            noinstall=true
+            ;;
+        --*) echo "bad option $1"
+            ;;
+        *) echo "argument $1"
+            ;;
+    esac
+    shift
+done
 
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
@@ -30,13 +37,6 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
 fi
 
 echo "OS detected: $platform"
-echo "Options enabled:"
-if [ $brutal ]; then
-    echo "BRUTAL - will overwrite all existing files and symlinks"
-fi
-if [ $noinstall ]; then
-    echo "NOINSTALL - will not bother trying to install anything from repos"
-fi
 
 if [ "$platform" == "linux" ]; then
     # Locale setting fun
@@ -62,7 +62,7 @@ else
 fi
 
 function install_pkgs_from_repo {
-    if [ "$options" != "noinstall" ]; then
+    if [ "$noinstall" != "true" ]; then
         echo "Installing from repo: $@"
         if [ "$platform" == "linux" ]; then
             apt-get -y install $@
@@ -82,7 +82,7 @@ CONFIG_PATH="$HOME/.toml_config"
 function git_clone_or_pull {
     echo "Git clone_or_pull $2 to $1"
     if cd $1; then
-        if [[ $# == 3 && "$3" == "brutal" ]]; then
+        if [[ "$brutal" == "true" ]]; then
             echo "Brutally overwiting any local changes"
             sudo -u $SUDO_USER git fetch --all
             sudo -u $SUDO_USER git reset --hard origin/master
@@ -104,7 +104,7 @@ function symlink_files_in_directory {
             if [ "$target" == "$1/$filename" ]; then
                 echo "Symlink already in place $1/$filename -> $2/$filename"
             else
-                if [ "$3" == "brutal" ]; then
+                if [ "$brutal" == "true" ]; then
                     echo "Brutally replacing $2/$filename with symlink to $1/$filename"
                     rm $2/$filename
                     sudo -u $SUDO_USER ln -s $1/$filename $2/$filename
