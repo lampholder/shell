@@ -179,6 +179,8 @@ git_clone_or_pull ~/.vim/bundle/neomake https://github.com/neomake/neomake.git
 git_clone_or_pull ~/.vim/bundle/jedi-vim https://github.com/davidhalter/jedi-vim
 sudo -u $SUDO_USER -H pip install --user jedi
 install_pkgs_from_repo pylint
+ln -s ~/.pylintrc ~/.toml_config/misc/.pylintrc
+sudo -u $SUDO_USER -H pip install --user nosetests
 
 # This bit doesn't currently honour the 'brutal' flag
 sudo -u $SUDO_USER ln -s $CONFIG_PATH/vim/plugins/* ~/.vim/bundle/
