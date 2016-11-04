@@ -23,6 +23,9 @@ highlight Search term=underline cterm=underline
 set number
 " }}}
 
+" mouses are for wimps
+set mouse=
+
 " === EDITING =============================================================
 " Indentation {
 set expandtab
