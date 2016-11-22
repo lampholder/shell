@@ -33,6 +33,8 @@ set tabstop=4
 set shiftwidth=4
 " }
 
+inoremap <c-z> <esc><c-z>
+
 " === INTERACTION =========================================================
 " Navigation {
 " Move around more quickly:
