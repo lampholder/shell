@@ -46,14 +46,12 @@ if [ "$platform" == "linux" ]; then
     echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
 fi
 
-eval "curl --version"
-return_code=$?
-if [ "$return_code" == "0" ]; then 
+test=`which curl`
+if [ "$test" != "" ]; then 
     downloader="curl"
 else
-    eval "wget --version"
-    return_code=$?
-    if [ "$return_code" == "0" ]; then
+    test=`which wget`
+    if [ "$test" != "" ]; then
         downloader="wget"
     else
         echo "This script requires at least one of curl/wget"
