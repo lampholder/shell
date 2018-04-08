@@ -7,5 +7,6 @@ function start_agent
     echo "succeeded"
     chmod 600 $SSH_ENV 
     . $SSH_ENV > /dev/null
-    ssh-add ~/.ssh/id_openmarket
+    ssh-add ~/.ssh/id_rsa
+    ssh-add ~/.ssh/id_rsa_new
 end

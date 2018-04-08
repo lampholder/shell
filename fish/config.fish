@@ -52,3 +52,7 @@ set fish_pager_color_completion normal
 set fish_pager_color_description 555\x1eyellow
 set fish_pager_color_prefix cyan
 set fish_pager_color_progress cyan
+
+test -s /Users/tom/.nvm-fish/nvm.fish; and source /Users/tom/.nvm-fish/nvm.fish
+
+eval (python -m virtualfish)
