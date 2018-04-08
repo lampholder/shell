@@ -1,15 +1,29 @@
 #!/bin/bash
-set -euo pipefail
-IFS=$'\n\t'
+#set -euo pipefail
+#IFS=$'\n\t'
 
 # This script sets up a fresh linux account for use
-if [[ $# == 0 || $1 == brutal ]]; then
-    options="brutal"
-fi
 
-if [[ $# == 0 || $1 == noinstall ]]; then
-    options="noinstall"
-fi
+brutal=false
+noinstall=false
+
+# Idiomatic parameter and option handling in sh
+while test $# -gt 0
+do
+    case "$1" in
+        --brutal) echo "Enabling BRUTAL mode"
+            brutal=true
+            ;;
+        --noinstall) echo "Enabling NOINSTALL mode"
+            noinstall=true
+            ;;
+        --*) echo "bad option $1"
+            ;;
+        *) echo "argument $1"
+            ;;
+    esac
+    shift
+done
 
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
@@ -32,14 +46,12 @@ if [ "$platform" == "linux" ]; then
     echo -e 'LANG=en_GB.UTF-8\nLC_ALL=en_GB.UTF-8' > /etc/default/locale
 fi
 
-eval "curl --version"
-return_code=$?
-if [ "$return_code" == "0" ]; then 
+test=`which curl`
+if [ "$test" != "" ]; then 
     downloader="curl"
 else
-    eval "wget --version"
-    return_code=$?
-    if [ "$return_code" == "0" ]; then
+    test=`which wget`
+    if [ "$test" != "" ]; then
         downloader="wget"
     else
         echo "This script requires at least one of curl/wget"
@@ -47,8 +59,8 @@ else
     fi
 fi
 
-function install_pkg_from_repo {
-    if [ "$options" != "noinstall" ]; then
+function install_pkgs_from_repo {
+    if [ "$noinstall" != "true" ]; then
         echo "Installing from repo: $@"
         if [ "$platform" == "linux" ]; then
             apt-get -y install $@
@@ -58,7 +70,7 @@ function install_pkg_from_repo {
     fi
 }
 
-install_pkg_from_repo git
+install_pkgs_from_repo git
 
 git config --global user.email "lampholder@gmail.com"
 git config --global user.name "Tom Lant"
@@ -68,7 +80,7 @@ CONFIG_PATH="$HOME/.toml_config"
 function git_clone_or_pull {
     echo "Git clone_or_pull $2 to $1"
     if cd $1; then
-        if [[ $# == 3 && "$3" == "brutal" ]]; then
+        if [[ "$brutal" == "true" ]]; then
             echo "Brutally overwiting any local changes"
             sudo -u $SUDO_USER git fetch --all
             sudo -u $SUDO_USER git reset --hard origin/master
@@ -90,7 +102,7 @@ function symlink_files_in_directory {
             if [ "$target" == "$1/$filename" ]; then
                 echo "Symlink already in place $1/$filename -> $2/$filename"
             else
-                if [ "$3" == "brutal" ]; then
+                if [ "$brutal" == "true" ]; then
                     echo "Brutally replacing $2/$filename with symlink to $1/$filename"
                     rm $2/$filename
                     sudo -u $SUDO_USER ln -s $1/$filename $2/$filename
@@ -115,20 +127,19 @@ function download_file {
 git_clone_or_pull $CONFIG_PATH https://github.com/lampholder/terminal.git
 
 # Fetch and configure fish shell
-install_pkg_from_repo fish
-chsh -s `which fish` $SUDO_USER
+install_pkgs_from_repo fish
 
 sudo -u $SUDO_USER mkdir -p ~/.config/fish/functions
 
-symlink_files_in_directory $CONFIG_PATH/fish ~/.config/fish $options
-symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions $options
+symlink_files_in_directory $CONFIG_PATH/fish ~/.config/fish
+symlink_files_in_directory $CONFIG_PATH/fish/functions ~/.config/fish/functions
 
 
 # Fetch and configure neovim + plugins
-install_pkg_from_repo libtool 
-install_pkg_from_repo libtool-bin || true # We don't mind if this one fails.
-install_pkg_from_repo autoconf automake cmake g++ pkg-config unzip build-essential
-install_pkg_from_repo python-dev python3-dev #python3-pip
+install_pkgs_from_repo libtool
+install_pkgs_from_repo libtool-bin || true # We don't mind if this one fails.
+install_pkgs_from_repo autoconf automake cmake g++ pkg-config unzip build-essential
+install_pkgs_from_repo python-dev python3-dev #python3-pip
 
 download_file https://bootstrap.pypa.io/get-pip.py
 python get-pip.py
@@ -138,12 +149,16 @@ git_clone_or_pull ~/neovim https://github.com/neovim/neovim
 cd ~/neovim
 make install
 
+# Tidy up
+cd ~
+rm -rf ~/neovim
+
 sudo -u $SUDO_USER mkdir -p ~/.vim/autoload
 sudo -u $SUDO_USER mkdir -p ~/.vim/bundle
 
 (cd ~/.vim/autoload && download_file https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim)
 
-symlink_files_in_directory $CONFIG_PATH/vim ~ $options
+symlink_files_in_directory $CONFIG_PATH/vim ~
 
 # Make Neovim use the standard vim settings.
 rm -rf ~/.config/nvim
@@ -161,7 +176,9 @@ git_clone_or_pull ~/.vim/bundle/supertab https://github.com/ervandew/supertab.gi
 git_clone_or_pull ~/.vim/bundle/neomake https://github.com/neomake/neomake.git
 git_clone_or_pull ~/.vim/bundle/jedi-vim https://github.com/davidhalter/jedi-vim
 sudo -u $SUDO_USER -H pip install --user jedi
-install_pkg_from_repo pylint
+install_pkgs_from_repo pylint
+ln -s ~/.toml_config/misc/.pylintrc ~/.pylintrc
+sudo -u $SUDO_USER -H pip install --user nose
 
 # This bit doesn't currently honour the 'brutal' flag
 sudo -u $SUDO_USER ln -s $CONFIG_PATH/vim/plugins/* ~/.vim/bundle/
@@ -171,5 +188,7 @@ sudo -u $SUDO_USER ln -s $CONFIG_PATH/vim/plugins/* ~/.vim/bundle/
 if [ -f "/proc/user_beancounters" ]; then
     echo "We're inside an openvz container"
     sudo -u $SUDO_USER mv $HOME/.bashrc $HOME/.bashrc_old
-    symlink_files_in_directory $CONFIG_PATH/bash ~ $options
+    symlink_files_in_directory $CONFIG_PATH/bash ~
 fi
+
+echo "Now run \"chsh -s `which fish` $SUDO_USER\""

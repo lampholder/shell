@@ -23,12 +23,17 @@ highlight Search term=underline cterm=underline
 set number
 " }}}
 
+" mouses are for wimps
+set mouse=
+
 " === EDITING =============================================================
 " Indentation {
 set expandtab
 set tabstop=4
 set shiftwidth=4
 " }
+
+inoremap <c-z> <esc><c-z>
 
 " === INTERACTION =========================================================
 " Navigation {
